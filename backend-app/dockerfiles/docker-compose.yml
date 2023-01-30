@@ -1,0 +1,48 @@
+version: '3'
+services:
+  db:
+    image: 'postgres:10-alpine'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: basic_app
+    ports:
+      - '5432:5432'
+  redis:
+    image: redis:6.2.5-alpine
+    ports:
+      - '6379:6379'
+  app:
+    depends_on:
+      - db
+      - redis
+    build:
+      context: ../
+      dockerfile: ./dockerfiles/app-Dockerfile
+    environment:
+      NODE_ENV: 'development'
+      DB_NAME: basic_app
+      DB_USER_NAME: postgres
+      DB_USER_PWD: password
+      DB_HOST_ADDRESS: db
+      DB_HOST_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    volumes:
+      - ../:/usr/src/app/basic-app
+      - /usr/src/app/basic-app/node_modules
+  web-app:
+    build:
+      context: ../../web-app/
+      dockerfile: dockerfile
+    container_name: frontend
+    ports:
+      - "8000:8000"
+      - "4173:4173"
+    volumes:
+      - ../../web-app/:/app/
+      - /app/node_modules
+    tty: true
