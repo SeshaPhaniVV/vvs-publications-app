@@ -1,6 +1,6 @@
 # Introduction
 
-Base App
+Publications App
 
 # Getting Started
 
@@ -62,7 +62,3 @@ Now stop the server for the `nyc` tool to generate coverage details for us.
 ```sh
 bash dev-env.sh stop
 ```
-
-Coverage details are generated in `coverage` folder.
-
-Use VS Code Extension [Code Coverage Highlighter](https://marketplace.visualstudio.com/items?itemName=brainfit.vscode-coverage-highlighter) to visualize the coverage locally.
