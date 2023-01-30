@@ -37,20 +37,6 @@ npm run test
 
 Or use VS Code Extension [Mocha Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter) for enhanced experience.
 
-### Code Coverage
-
-For fetching the code coverage, we need to run the server in **coverage** mode.
-
-```sh
-bash dev-env.sh init coverage
-```
-
-Now run the tests.
-
-```sh
-npm run test
-```
-
 Now stop the server for the `nyc` tool to generate coverage details for us.
 
 ```sh
