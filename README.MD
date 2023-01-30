@@ -13,17 +13,11 @@ Follow the below instructions to get started with this project.
 
 ## Installation
 
-Install the project dependencies using the below command.
-
-```sh
-npm i
-```
-
 ## Starting Server
 
 Below modes will run
 
-- Basic-backend-app, postgres & redis inside docker containers.
+- backend-app, frontend-app postgres & redis inside docker containers.
 - db migrations & seeds
 
 ```sh
