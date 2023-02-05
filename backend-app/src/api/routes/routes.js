@@ -33,5 +33,7 @@ export default (app) => {
   publicationRoutes.get('/user/:userId', publicationsSchemaI.reqValidation, publicationControllerI.getUserPublications);
   publicationRoutes.post('', publicationsSchemaI.reqValidation, publicationControllerI.createPublication);
   publicationRoutes.delete('/:id', publicationsSchemaI.reqValidation, publicationControllerI.deletePublication);
+  publicationRoutes.delete('', publicationsSchemaI.reqValidation, publicationControllerI.deletePublications);
+
   publicationRoutes.put('/:id', publicationsSchemaI.reqValidation, publicationControllerI.updatePublication);
 };

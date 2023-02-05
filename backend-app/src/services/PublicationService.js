@@ -1,5 +1,6 @@
 import Publication from '@models/publications';
 import User from '@models/users';
+import { Op } from 'sequelize';
 
 export default class PublicationService {
   /** @type {import('@loaders/logger')} */
@@ -31,6 +32,12 @@ export default class PublicationService {
     const { id } = payload;
 
     const deletedPublication = await Publication.destroy({ where: { id } });
+    return deletedPublication;
+  }
+
+  async deletePublications(payload) {
+    const { publicationIds } = payload;
+    const deletedPublication = await Publication.destroy({ where: { id: { [Op.in]: publicationIds } } });
     return deletedPublication;
   }
 

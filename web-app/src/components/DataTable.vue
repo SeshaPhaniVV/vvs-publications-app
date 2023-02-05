@@ -1,5 +1,26 @@
 <template>
   <n-card title="User Publications Details">
+    <n-space>
+      <n-button type="primary" class="create-button" @click="showModal = true">
+        Create
+        <template #icon>
+          <n-icon><CreateIcon /> </n-icon>
+        </template>
+      </n-button>
+      <n-button
+        v-if="selectedRows.length > 0"
+        strong
+        secondary
+        type="error"
+        class="create-button"
+        @click="showBulkDeleteModal = true"
+      >
+        Bulk Delete
+        <template #icon>
+          <n-icon><DeleteIcon /> </n-icon>
+        </template>
+      </n-button>
+    </n-space>
     <n-data-table
       ref="publicatons-table"
       remote
@@ -8,9 +29,18 @@
       :cascade="false"
       :loading="loading"
       :row-key="rowKey"
-      allow-checking-not-loaded
+      @update:checked-row-keys="handleCheck"
     />
   </n-card>
+  <n-modal
+    v-model:show="showBulkDeleteModal"
+    preset="dialog"
+    title="Are you sure?"
+    positive-text="OK"
+    negative-text="Cancel"
+    @positive-click="handleBulkDelete(selectedRows)"
+    @negative-click="cancelCallback(userData.id)"
+  />
   <n-modal
     v-model:show="showModal"
     preset="dialog"
@@ -50,14 +80,21 @@ export default defineComponent({
     const dataRef = ref([]);
     const loadingRef = ref(true);
     const showModalRef = ref(false);
+    const showBulkDeleteModalRef = ref(false);
     const titleRef = ref('');
     const yearRef = ref();
     const curIdRef = ref();
+    const rowsRef = ref([]);
 
     async function updateUser(userId) {
       const { data } = await query(userId);
       dataRef.value = data.publications;
       loadingRef.value = false;
+    }
+
+    function handleCheck(rowKeys) {
+      console.log({ rowKeys });
+      rowsRef.value = [...rowKeys];
     }
 
     async function deletePublication(row) {
@@ -71,6 +108,15 @@ export default defineComponent({
       curIdRef.value = null;
       titleRef.value = '';
       yearRef.value = null;
+      showBulkDeleteModalRef.value = false;
+      await updateUser(props.userId);
+    }
+
+    async function handleBulkDelete(rows) {
+      await UserPublicationService.bulkDeletePublications(rows);
+      toast.error(`Successfully deleted ${rows.length} publications`);
+      rowsRef.value = [];
+      showBulkDeleteModalRef.value = false;
       await updateUser(props.userId);
     }
 
@@ -82,7 +128,11 @@ export default defineComponent({
     }
 
     async function updatePublication(id, data) {
-      await UserPublicationService.updatePublication(id, data);
+      if (!id) {
+        await UserPublicationService.createPublication(props.userId, data);
+      } else {
+        await UserPublicationService.updatePublication(id, data);
+      }
       loadingRef.value = true;
       curIdRef.value = null;
       titleRef.value = '';
@@ -92,6 +142,11 @@ export default defineComponent({
     }
 
     const columns = [
+      {
+        type: 'selection',
+        fixed: 'left',
+        options: ['all'],
+      },
       {
         title: 'Id',
         key: 'id',
@@ -149,17 +204,29 @@ export default defineComponent({
     return {
       data: dataRef,
       showModal: showModalRef,
+      showBulkDeleteModal: showBulkDeleteModalRef,
       title: titleRef,
       year: yearRef,
       curId: curIdRef,
       columns: columnsRef,
       loading: loadingRef,
+      selectedRows: rowsRef,
       updatePublication,
       cancelCallback,
+      handleBulkDelete,
+      handleCheck,
       rowKey(rowData) {
-        return rowData.column1;
+        return rowData.id;
       },
     };
   },
 });
 </script>
+
+<style scoped>
+.create-button {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

@@ -27,6 +27,15 @@ export default class UserController extends BaseController {
     }
   }
 
+  async deletePublications(req, res, next) {
+    try {
+      const response = await this.PublicationService.deletePublications(req.validatedPayload);
+      res.status(200).json(response);
+    } catch (err) {
+      this.handleError(err, req, res, next);
+    }
+  }
+
   async updatePublication(req, res, next) {
     try {
       const response = await this.PublicationService.updatePublication(req.validatedPayload);

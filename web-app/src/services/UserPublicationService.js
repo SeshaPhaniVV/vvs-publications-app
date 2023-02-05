@@ -32,6 +32,15 @@ class UserPublicationService {
   updatePublication(id, data) {
     return http.put(`/publications/${id}`, data);
   }
+
+  createPublication(userId, data) {
+    data.student_id = userId;
+    return http.post(`/publications`, data);
+  }
+
+  bulkDeletePublications(ids) {
+    return http.delete(`/publications`, { params: { publicationIds: ids } });
+  }
 }
 
 export default new UserPublicationService();

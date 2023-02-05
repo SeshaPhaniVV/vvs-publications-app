@@ -17,7 +17,9 @@
           <n-button tertiary type="primary" @click="showModal = true"> Update </n-button>
         </n-space>
       </n-tab-pane>
-      <n-tab-pane name="Publication Details"> <DataTable :user-id="userData.id"></DataTable> </n-tab-pane>
+      <n-tab-pane name="Publication Details">
+        <DataTable :user-id="userData.id"></DataTable>
+      </n-tab-pane>
     </n-tabs>
   </n-card>
 
@@ -151,6 +153,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.create-button {
+  margin-bottom: 10px;
+  justify-content: flex-end;
+}
 .buttons {
   margin: 10px;
   justify-content: flex-end !important;
