@@ -1,13 +1,18 @@
 export default [
   {
+    path: '',
+    name: 'base',
+    component: () => import('@/views/UsersView.vue'),
+  },
+  {
     path: '/home',
     name: 'home',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/UsersView.vue'),
   },
   {
     path: '/pinia',
     name: 'pinia',
-    component: () => import('@/views/PiniaView.vue'),
+    component: () => import('@/views/UsersView.vue'),
   },
   {
     path: '/users',
