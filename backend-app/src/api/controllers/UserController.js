@@ -27,6 +27,15 @@ export default class UserController extends BaseController {
     }
   }
 
+  async updateUser(req, res, next) {
+    try {
+      const response = await this.UserService.updateUser(req.validatedPayload);
+      res.status(201).json(response);
+    } catch (err) {
+      this.handleError(err, req, res, next);
+    }
+  }
+
   async createUser(req, res, next) {
     try {
       const response = await this.UserService.createUser(req.validatedPayload);

@@ -17,7 +17,7 @@
 <script>
 import { NButton } from 'naive-ui';
 import { defineComponent, h, ref, onMounted } from 'vue';
-import UserService from '@/services/UserService';
+import UserPublicationService from '@/services/UserPublicationService';
 import DataTable from '../components/DataTable.vue';
 import router from '@/router';
 
@@ -26,7 +26,6 @@ const columns = [
     type: 'expand',
     expandable: () => true,
     renderExpand: (rowData) => {
-      console.log({ rowData });
       return h(DataTable, { userId: rowData.id });
     },
   },
@@ -59,7 +58,7 @@ const columns = [
           size: 'small',
           onClick: () => goToUserPage(row),
         },
-        { default: () => 'Edit' },
+        { default: () => 'View' },
       );
     },
   },
@@ -70,7 +69,7 @@ function goToUserPage(row) {
 }
 
 function query() {
-  return UserService.getAll();
+  return UserPublicationService.getAll();
 }
 
 export default defineComponent({

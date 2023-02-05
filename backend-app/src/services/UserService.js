@@ -45,6 +45,13 @@ export default class UserService {
     return deletedUser;
   }
 
+  async updateUser(payload) {
+    const { id } = payload;
+
+    const updatedUser = await User.update(payload, { where: { id } });
+    return updatedUser;
+  }
+
   async createUser(payload) {
     const user = await User.create(payload);
     return user;

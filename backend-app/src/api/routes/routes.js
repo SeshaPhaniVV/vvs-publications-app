@@ -21,6 +21,7 @@ export default (app) => {
   userRoutes.get('/:id', userSchemaI.userValidation, userControllerI.getUser);
   userRoutes.post('', userSchemaI.userValidation, userControllerI.createUser);
   userRoutes.delete('/:id', userSchemaI.userValidation, userControllerI.deleteUser);
+  userRoutes.put('/:id', userSchemaI.userValidation, userControllerI.updateUser);
 
   /**
    * Publication Routes

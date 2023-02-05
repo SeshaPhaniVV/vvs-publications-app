@@ -1,66 +1,82 @@
 <template>
+  <div class="top-nav">
+    <n-button tertiary @click="handleClick">
+      Home
+      <template #icon>
+        <n-icon><BackIcon /> </n-icon>
+      </template>
+    </n-button>
+  </div>
+
   <n-card content-style="padding: 0;">
     <n-tabs type="line" size="large" :tabs-padding="20" pane-style="padding: 20px;">
-      <n-tab-pane name="User Details"> <UserComponent></UserComponent> </n-tab-pane>
-      <n-tab-pane name="Publication Details"> <DataTable></DataTable> </n-tab-pane>
+      <n-tab-pane name="User Details">
+        <UserComponent :first-name="firstName" :last-name="lastName" :email="email"></UserComponent>
+        <n-space class="buttons">
+          <n-button strong secondary type="tertiary" @click="showDeleteModal = true"> Delete </n-button>
+          <n-button tertiary type="primary" @click="showModal = true"> Update </n-button>
+        </n-space>
+      </n-tab-pane>
+      <n-tab-pane name="Publication Details"> <DataTable :user-id="userData.id"></DataTable> </n-tab-pane>
     </n-tabs>
   </n-card>
+
+  <n-modal
+    v-model:show="showDeleteModal"
+    preset="dialog"
+    title="Deleing user will delete publication details as well"
+    positive-text="OK"
+    negative-text="Cancel"
+    @positive-click="handleDelete(userData.id)"
+    @negative-click="cancelCallback(userData.id)"
+  />
+
+  <n-modal
+    v-model:show="showModal"
+    preset="dialog"
+    title="Update the user details"
+    positive-text="Submit"
+    negative-text="Cancel"
+    @positive-click="handleUpdate(userData.id, { firstName, lastName, email })"
+    @negative-click="cancelCallback(userData.id)"
+  >
+    <n-space vertical>
+      <span> First Name: </span>
+      <n-input v-model:value="firstName" type="text" placeholder="First name" />
+      <span> Last Name: </span>
+      <n-input v-model:value="lastName" type="text" placeholder="Last name" />
+      <span> Email: </span>
+      <n-input v-model:value="email" type="text" placeholder="Email" />
+    </n-space>
+  </n-modal>
 </template>
 
 <script>
-import { NButton } from 'naive-ui';
-import { defineComponent, h, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import UserService from '@/services/UserService';
+import { toast } from 'vue3-toastify';
+import UserPublicationService from '@/services/UserPublicationService';
 import DataTable from '../components/DataTable.vue';
 import UserComponent from '../components/UserComponent.vue';
+import router from '@/router';
 
-const columns = [
-  {
-    type: 'expand',
-    expandable: () => true,
-    renderExpand: (rowData) => {
-      console.log({ rowData });
-      return h(DataTable, { userId: rowData.id });
-    },
-  },
-  {
-    title: '#',
-    key: 'id',
-    render: (_, index) => {
-      return `${index + 1}`;
-    },
-  },
-  {
-    title: 'First Name',
-    key: 'firstName',
-  },
-  {
-    title: 'Last Name',
-    key: 'lastName',
-  },
-  {
-    title: 'Email',
-    key: 'email',
-  },
-  {
-    title: 'Action',
-    key: 'actions',
-    render(row) {
-      return h(
-        NButton,
-        {
-          size: 'small',
-          onClick: () => goToUserPage(row),
-        },
-        { default: () => 'Edit' },
-      );
-    },
-  },
-];
+async function query(id) {
+  try {
+    const { data } = await UserPublicationService.getUserPublications(id);
+    console.log({ data });
+    if (data.user === null) {
+      toast.error('User is not present');
+      router.push({ path: `/users` });
+    }
+    return data;
+  } catch (err) {
+    toast.error('User is not present');
+    router.push({ path: `/users` });
+  }
+}
 
-function query(id) {
-  return UserService.getUserPublications(id);
+function handleClick() {
+  router.push({ path: `/users` });
 }
 
 export default defineComponent({
@@ -69,30 +85,78 @@ export default defineComponent({
     DataTable,
   },
   setup() {
+    const showModalRef = ref(false);
+    const showDeleteModalRef = ref(false);
+    const firstNameRef = ref('');
+    const lastNameRef = ref('');
+    const emailRef = ref('');
+
     const route = useRoute();
     const userDataRef = ref([]);
     const publicationsDataRef = ref([]);
-    const loadingRef = ref(true);
-    const columnsRef = ref(columns);
+
+    async function handleUpdate(id, data) {
+      try {
+        await UserPublicationService.update(id, data);
+        await updateUser(id);
+        toast.success('User updated succcesfully!');
+      } catch (err) {
+        toast.success('User updation failed!');
+        console.log({ err });
+      }
+    }
+
+    async function handleDelete(id) {
+      await UserPublicationService.delete(id);
+      toast.error('User Deleted Successfully');
+      router.push({ path: `/users` });
+    }
+
+    async function cancelCallback(id) {
+      await updateUser(id);
+      showModalRef.value = false;
+      showDeleteModalRef.value = false;
+    }
+
+    async function updateUser(id) {
+      const data = await query(id);
+      const { user, publications } = data;
+      userDataRef.value = user;
+      publicationsDataRef.value = publications;
+      firstNameRef.value = user.firstName;
+      lastNameRef.value = user.lastName;
+      emailRef.value = user.email;
+    }
 
     onMounted(() => {
       const { id } = route.params;
-      query(id).then((data) => {
-        userDataRef.value = data.data.user;
-        publicationsDataRef.value = data.data.publications;
-        loadingRef.value = false;
-      });
+      updateUser(id);
     });
 
     return {
       userData: userDataRef,
       publicationsData: publicationsDataRef,
-      columns: columnsRef,
-      loading: loadingRef,
-      rowKey(rowData) {
-        return rowData.column1;
-      },
+      handleClick,
+      handleUpdate,
+      handleDelete,
+      cancelCallback,
+      showModal: showModalRef,
+      showDeleteModal: showDeleteModalRef,
+      firstName: firstNameRef,
+      lastName: lastNameRef,
+      email: emailRef,
     };
   },
 });
 </script>
+
+<style scoped>
+.buttons {
+  margin: 10px;
+  justify-content: flex-end !important;
+}
+.top-nav {
+  margin: 10px;
+  justify-content: flex-end !important;
+}
+</style>

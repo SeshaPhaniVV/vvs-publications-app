@@ -1,6 +1,6 @@
 import http from '../http-common';
 
-class UserService {
+class UserPublicationService {
   getAll() {
     return http.get('/users');
   }
@@ -20,6 +20,18 @@ class UserService {
   delete(id) {
     return http.delete(`/users/${id}`);
   }
+
+  update(id, data) {
+    return http.put(`/users/${id}`, data);
+  }
+
+  deletePublication(id) {
+    return http.delete(`/publications/${id}`);
+  }
+
+  updatePublication(id, data) {
+    return http.put(`/publications/${id}`, data);
+  }
 }
 
-export default new UserService();
+export default new UserPublicationService();
