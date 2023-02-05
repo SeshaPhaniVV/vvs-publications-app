@@ -2,6 +2,8 @@
 
 Publications App
 
+#Frontend - vue3 - https://drive.google.com/file/d/1GvBGS_a8gqANT2DQoQLe2fDzM5jBLYGc/view?usp=sharing
+
 # Getting Started
 
 Follow the below instructions to get started with this project.
