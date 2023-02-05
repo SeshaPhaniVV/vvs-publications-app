@@ -30,5 +30,9 @@ bash dev-env.sh stop
 bash dev-env.sh start
 ```
 
+## Postman Collection for the apis
+
+Postman Link [here](PublicatonsApp.postman_collection.json)
+
 Front end server: `http://localhost:8000`
 Backend Server: `http://localhost:3000`

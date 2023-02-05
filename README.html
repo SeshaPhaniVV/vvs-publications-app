@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Introduction</title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="introduction">Introduction</h1>
+<p>Publications App</p>
+<h1 id="getting-started">Getting Started</h1>
+<p>Follow the below instructions to get started with this project.</p>
+<h2 id="software-dependencies">Software Dependencies</h2>
+<ul>
+<li>Docker</li>
+</ul>
+<h2 id="starting-server">Starting Server</h2>
+<p>Below modes will run</p>
+<ul>
+<li>backend-app, frontend-app postgres &amp; redis inside docker containers.</li>
+<li>db migrations &amp; seeds</li>
+</ul>
+<pre><code class="language-sh"><span class="hljs-comment"># go to backend app</span>
+<span class="hljs-built_in">cd</span> backend-app
+<span class="hljs-comment"># to build and run the containers</span>
+bash dev-env.sh init
+<span class="hljs-comment"># to stop and remove the containers</span>
+bash dev-env.sh down
+<span class="hljs-comment"># to stop the containers</span>
+bash dev-env.sh stop
+<span class="hljs-comment"># to start the container</span>
+bash dev-env.sh start
+</code></pre>
+<h2 id="postman-collection-for-the-apis">Postman Collection for the apis</h2>
+<p>Postman Link <a href="PublicatonsApp.postman_collection.json">here</a></p>
+<p>Front end server: <code>http://localhost:8000</code>
+Backend Server: <code>http://localhost:3000</code></p>
+
+        
+        
+    </body>
+    </html>
