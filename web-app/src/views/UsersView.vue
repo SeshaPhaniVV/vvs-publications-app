@@ -1,19 +1,25 @@
 <template>
-  <n-card content-style="padding: 0;">
-    <n-tabs type="line" size="large" :tabs-padding="20" pane-style="padding: 20px;">
-      <n-tab-pane name="User Details"> <UserComponent></UserComponent> </n-tab-pane>
-      <n-tab-pane name="Publication Details"> <DataTable></DataTable> </n-tab-pane>
-    </n-tabs>
+  <n-card title="Users Page">
+    <n-data-table
+      ref="table"
+      remote
+      :single-line="false"
+      :columns="columns"
+      :data="data"
+      :cascade="false"
+      :loading="loading"
+      :row-key="rowKey"
+      allow-checking-not-loaded
+    />
   </n-card>
 </template>
 
 <script>
 import { NButton } from 'naive-ui';
 import { defineComponent, h, ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import UserService from '@/services/UserService';
 import DataTable from '../components/DataTable.vue';
-import UserComponent from '../components/UserComponent.vue';
+import router from '@/router';
 
 const columns = [
   {
@@ -59,34 +65,29 @@ const columns = [
   },
 ];
 
-function query(id) {
-  return UserService.getUserPublications(id);
+function goToUserPage(row) {
+  router.push({ path: `/users/${row.id}` });
+}
+
+function query() {
+  return UserService.getAll();
 }
 
 export default defineComponent({
-  components: {
-    UserComponent,
-    DataTable,
-  },
   setup() {
-    const route = useRoute();
-    const userDataRef = ref([]);
-    const publicationsDataRef = ref([]);
+    const dataRef = ref([]);
     const loadingRef = ref(true);
     const columnsRef = ref(columns);
 
     onMounted(() => {
-      const { id } = route.params;
-      query(id).then((data) => {
-        userDataRef.value = data.data.user;
-        publicationsDataRef.value = data.data.publications;
+      query().then((data) => {
+        dataRef.value = data.data;
         loadingRef.value = false;
       });
     });
 
     return {
-      userData: userDataRef,
-      publicationsData: publicationsDataRef,
+      data: dataRef,
       columns: columnsRef,
       loading: loadingRef,
       rowKey(rowData) {

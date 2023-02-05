@@ -7,6 +7,6 @@ import router from './router';
 import store from './store';
 
 import '@/assets/main.css';
-import '@/style/index.less';
+// import '@/style/index.less';
 
 createApp(App).use(router).use(store).use(naive).mount('#app');
