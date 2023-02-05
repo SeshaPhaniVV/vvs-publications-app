@@ -14,7 +14,7 @@ Follow the below instructions to get started with this project.
 
 Below modes will run
 
-- Basic-backend-app, postgres & redis inside docker containers.
+- backend-app, frontend-app postgres & redis inside docker containers.
 - db migrations & seeds
 
 ```sh
