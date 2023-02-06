@@ -143,7 +143,7 @@ export default defineComponent({
       cancelCallback,
       handleCreate,
       rowKey(rowData) {
-        return rowData.column1;
+        return rowData.id;
       },
     };
   },
