@@ -2,6 +2,9 @@
 
 Publications App
 
+#Frontend Functionality video- vue3 - 
+https://drive.google.com/file/d/1O2h83DUgPE4pQ-pMKoslmIMI9XSFZJ6r/view?usp=sharing
+
 # Getting Started
 
 Follow the below instructions to get started with this project.
